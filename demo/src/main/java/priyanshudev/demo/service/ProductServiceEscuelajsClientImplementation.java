@@ -2,6 +2,7 @@ package priyanshudev.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import priyanshudev.demo.client.escuelajs.dtos.CreateProxyProductDto;
@@ -54,20 +55,27 @@ public class ProductServiceEscuelajsClientImplementation implements ProductServi
         return convertProxyProductDtoToProduct.convertProxyProductToProduct(productDto);
     }
 
-    @Override
-    public Product updateProduct(Long id, ProxyProductDto productDto) throws NotFoundException {
-        ProxyProductDto updatedProduct = sourceClient.updateProduct(id, productDto);
-        return convertProxyProductDtoToProduct.convertProxyProductToProduct(updatedProduct);
-    }
-
-    public boolean deleteProduct(Long id) {
-        boolean isDeleted = false;
-        try {
-            isDeleted = sourceClient.deleteProduct(id);
-        } catch (NotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return isDeleted;
-
-    }
+//    @Override
+//    @Modifying
+//    public Product updateProduct(Long id, ProxyProductDto productDto) throws NotFoundException {
+//        ProxyProductDto updatedProduct = sourceClient.updateProduct(id, productDto);
+//        return convertProxyProductDtoToProduct.convertProxyProductToProduct(updatedProduct);
+//    }
+//
+//    @Override
+//    public void deleteById(Long id) {
+//        deleteProduct(id);
+//    }
+//
+//    public void deleteProduct(Long id) {
+//        boolean isDeleted = false;
+//        try {
+//            isDeleted = sourceClient.deleteProduct(id);
+//        } catch (NotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//        System.out.println("Deleted : "+ isDeleted);
+//        return;
+//
+//    }
 }

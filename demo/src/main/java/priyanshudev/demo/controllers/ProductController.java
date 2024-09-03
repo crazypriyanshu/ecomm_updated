@@ -50,12 +50,12 @@ public class ProductController {
     return new ResponseEntity(newProduct, HttpStatus.CREATED);
     }
 
-    @PutMapping("/product/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProxyProductDto productDto) throws NotFoundException {
-        Product newProduct = productService.updateProduct(id,productDto);
-        ResponseEntity<Product> response = new ResponseEntity(newProduct, HttpStatus.OK);
-        return response;
-    }
+//    @PutMapping("/product/{id}")
+//    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody ProxyProductDto productDto) throws NotFoundException {
+//        Product newProduct = productService.updateProduct(id,productDto);
+//        ResponseEntity<Product> response = new ResponseEntity(newProduct, HttpStatus.OK);
+//        return response;
+//    }
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() throws NotFoundException {
@@ -63,10 +63,10 @@ public class ProductController {
         return responseEntity;
     }
 
-    @DeleteMapping("/product/{id}")
-    public boolean deleteProduct(@PathVariable Long id) {
-        return productService.deleteProduct(id);
-    }
+//    @DeleteMapping("/product/{id}")
+//    public void deleteProduct(@PathVariable Long id) {
+//        productService.deleteById(id);
+//    }
 
 //    @ExceptionHandler(NotFoundException.class)
 //    public ResponseEntity<ErrorResponseDto> notFoundError(Exception ex) {
