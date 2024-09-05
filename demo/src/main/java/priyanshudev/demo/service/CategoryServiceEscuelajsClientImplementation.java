@@ -9,6 +9,7 @@ import priyanshudev.demo.client.escuelajs.dtos.ProxyProductDto;
 import priyanshudev.demo.client.escuelajs.helper.ConvertProxyProductDtoToProduct;
 import priyanshudev.demo.client.escuelajs.service.Client;
 import priyanshudev.demo.exceptions.NotFoundException;
+import priyanshudev.demo.models.Category;
 import priyanshudev.demo.models.Product;
 
 import java.util.ArrayList;
@@ -17,13 +18,14 @@ import java.util.Optional;
 @Service
 public class CategoryServiceEscuelajsClientImplementation implements CategoryService {
 
+
     @Override
-    public String getAllCategories() {
-        return "getting all categories";
+    public Optional<Category> getCategoryById(Long id) {
+        return Optional.empty();
     }
 
     @Override
-    public String getCategoryById() {
-        return "getting category by id";
+    public List<Category> getAll() {
+        return List.of();
     }
 }

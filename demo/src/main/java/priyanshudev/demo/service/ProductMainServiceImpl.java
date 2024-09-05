@@ -1,18 +1,26 @@
 package priyanshudev.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 import priyanshudev.demo.client.escuelajs.dtos.CreateProxyProductDto;
 import priyanshudev.demo.client.escuelajs.dtos.ProxyProductDto;
+import priyanshudev.demo.dtos.CreateProductDto;
 import priyanshudev.demo.exceptions.NotFoundException;
 import priyanshudev.demo.models.Product;
 import priyanshudev.demo.repositories.ProductRepository;
+import priyanshudev.demo.utils.CreateProductDtoToProductConverter;
 
 import java.util.List;
 import java.util.Optional;
 
+@Primary
+@Service(value = "selfProductService")
 public class ProductMainServiceImpl implements ProductService {
     @Autowired
     ProductRepository productRepository;
+    @Autowired
+    CreateProductDtoToProductConverter productConverter;
 
     @Override
     public Optional<Product> getSingleProduct(Long id) throws NotFoundException {
@@ -29,22 +37,23 @@ public class ProductMainServiceImpl implements ProductService {
     }
 
     @Override
-    public Product addNewProduct(CreateProxyProductDto productDto) throws NotFoundException {
-        return productRepository.save(productDto);
+    public Product addNewProduct(CreateProductDto productDto) throws NotFoundException {
+        Product product = productConverter.convertToProduct(productDto);
+        return productRepository.save(product);
     }
 
-//    @Override
-//    public Product updateProduct(Long id, ProxyProductDto dto) throws NotFoundException {
-//        return productRepository.updateProduct(id, dto);
-//    }
+    @Override
+    public void deleteById(Long id) throws NotFoundException {
+        try {
+            productRepository.deleteById(id);
+        }
+        catch (Exception e) {
+            throw new NotFoundException("Something is wrong and while deleting product with id: "+ id);
+        }
 
-//    @Override
-//    public void deleteById(Long id) {
-//        deleteProductById(id);
-//    }
-//
-//    public void deleteProductById(Long id) {
-//        productRepository.deleteById(id);
-//        return;
-//    }
+    }
+
+    public List<Product> productWithCategory() {
+        return productRepository.productWithCategory();
+    }
 }

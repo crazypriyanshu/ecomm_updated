@@ -13,16 +13,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Product save(CreateProxyProductDto product);
+    Product save(Product product);
     Optional<Product> findById(Long id);
     List<Product> findAll();
 
-//    @Modifying
-//    @Transactional
-//    @Query("update Product p set p.name = :#{#dto.name}, p.price = :#{#dto.price}, p.description = :#{#dto.description} WHERE p.id = :id")
-//    Product updateProduct(@Param("id") Long id, @Param("dto") ProxyProductDto dto);
-//
-//    @Modifying
-//    @Query("delete from Product p where p.Id = :id")
-//    void deleteById(Long id);
+    @Modifying
+    void deleteById(Long id);
+
+    @Query(value = "select * from product where category_id is not null ", nativeQuery = true)
+    List<Product> productWithCategory();
 }

@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import priyanshudev.demo.client.escuelajs.dtos.CreateProxyProductDto;
-import priyanshudev.demo.client.escuelajs.dtos.ProxyProductDto;
+import priyanshudev.demo.dtos.CreateProductDto;
 import priyanshudev.demo.exceptions.NotFoundException;
 import priyanshudev.demo.models.Product;
 import priyanshudev.demo.service.ProductService;
@@ -16,11 +15,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products/{id}")
+    @GetMapping("withCategory")
+    public ResponseEntity<List<Product>> productWithId() {
+
+        List<Product> product = productService.productWithCategory();
+        ResponseEntity<List<Product>> response = new ResponseEntity<>(product, HttpStatus.OK);
+        return response;
+    }
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<Product>> getProductById(@PathVariable Long id) throws NotFoundException {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("con", "priyanshu-proxy-server-application");
@@ -43,8 +50,8 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PostMapping("/product")
-    public ResponseEntity<Product> addProduct(@RequestBody CreateProxyProductDto product) throws NotFoundException {
+    @PostMapping("")
+    public ResponseEntity<Product> addProduct(@RequestBody CreateProductDto product) throws NotFoundException {
     Product newProduct = productService.addNewProduct(product);
     ResponseEntity<Product> response = new ResponseEntity(newProduct, HttpStatus.CREATED);
     return new ResponseEntity(newProduct, HttpStatus.CREATED);
@@ -57,16 +64,16 @@ public class ProductController {
 //        return response;
 //    }
 
-    @GetMapping("/products")
+    @GetMapping("")
     public ResponseEntity<List<Product>> getAllProducts() throws NotFoundException {
         ResponseEntity<List<Product>> responseEntity = new ResponseEntity(productService.getAllProducts(), HttpStatus.OK);
         return responseEntity;
     }
 
-//    @DeleteMapping("/product/{id}")
-//    public void deleteProduct(@PathVariable Long id) {
-//        productService.deleteById(id);
-//    }
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable Long id) throws NotFoundException {
+        productService.deleteById(id);
+    }
 
 //    @ExceptionHandler(NotFoundException.class)
 //    public ResponseEntity<ErrorResponseDto> notFoundError(Exception ex) {

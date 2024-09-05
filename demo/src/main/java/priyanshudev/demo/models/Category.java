@@ -20,7 +20,7 @@ public class Category extends BaseModel{
     private Date creationAt;
     private Date updatedAt;
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
+    @Fetch(FetchMode.JOIN)
     private List<Product> products;
 
 }

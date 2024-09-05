@@ -10,6 +10,7 @@ import priyanshudev.demo.client.escuelajs.dtos.CreateProxyProductDto;
 import priyanshudev.demo.client.escuelajs.dtos.ProxyProductDto;
 import priyanshudev.demo.client.escuelajs.helper.Helper;
 import priyanshudev.demo.exceptions.NotFoundException;
+import priyanshudev.demo.models.Product;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Client {
         return response.getBody();
     }
 
-    public ProxyProductDto addNewProduct(CreateProxyProductDto productDto) {
+    public ProxyProductDto addNewProduct(Product productDto) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<ProxyProductDto> response = restTemplate.postForEntity(
                 "https://api.escuelajs.co/api/v1/products",
