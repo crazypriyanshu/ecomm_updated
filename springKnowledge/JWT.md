@@ -1,4 +1,5 @@
 ## JWT
+Self validating tokens
 
 #### What is JWT Token ?
 JSON Web Token (JWT) is an open standard (RFC 7519) that defines 

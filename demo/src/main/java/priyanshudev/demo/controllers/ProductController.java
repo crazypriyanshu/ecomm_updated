@@ -64,8 +64,15 @@ public class ProductController {
 //        return response;
 //    }
 
+
+    // Only admins can see all products
     @GetMapping("")
-    public ResponseEntity<List<Product>> getAllProducts() throws NotFoundException {
+    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("AUTH_TOKEN") String token) throws NotFoundException {
+        if (token.isEmpty() || token == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        //validate token
+        // Rest template
         ResponseEntity<List<Product>> responseEntity = new ResponseEntity(productService.getAllProducts(), HttpStatus.OK);
         return responseEntity;
     }
