@@ -28,8 +28,5 @@ public class AuthenticationClient {
 
     }
 
-    public void getUserDetails(String token) {
-
-    }
 
 }

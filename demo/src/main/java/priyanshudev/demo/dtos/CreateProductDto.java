@@ -11,4 +11,17 @@ public class CreateProductDto {
     private double price;
     private Long categoryId;
     private String images;
+
+    protected void CreateProductDto() {
+        this.title = " ";
+        this.description = " ";
+        this.price = 0.00;
+    }
+
+    public void doSimpleThings() {
+        System.out.println();
+
+    }
 }
+
+

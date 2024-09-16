@@ -1,11 +1,18 @@
 package priyanshudev.demo.controllers;
 
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import priyanshudev.demo.client.authenticationClients.AuthenticationClient;
+import priyanshudev.demo.client.authenticationClients.dto.InvalidTokenDto;
+import priyanshudev.demo.client.authenticationClients.dto.Role;
+import priyanshudev.demo.client.authenticationClients.dto.SessionStatus;
+import priyanshudev.demo.client.authenticationClients.dto.ValidateTokenResponseDto;
 import priyanshudev.demo.dtos.CreateProductDto;
 import priyanshudev.demo.exceptions.NotFoundException;
 import priyanshudev.demo.models.Product;
@@ -19,6 +26,8 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private AuthenticationClient authenticationClient;
 
     @GetMapping("withCategory")
     public ResponseEntity<List<Product>> productWithId() {
@@ -67,12 +76,35 @@ public class ProductController {
 
     // Only admins can see all products
     @GetMapping("")
-    public ResponseEntity<List<Product>> getAllProducts(@RequestHeader("AUTH_TOKEN") String token) throws NotFoundException {
-        if (token.isEmpty() || token == null) {
+    public ResponseEntity<List<Product>> getAllProducts(@Nullable @RequestHeader("AUTH_TOKEN") String token,
+                                                        @Nullable @RequestHeader("USER_ID") Long userId ) throws NotFoundException {
+        // if token exists
+        if (token == null) {
+            throw new RuntimeException("Token is null or invalid");
+        }
+        if (token.isEmpty() || token == null || userId == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         //validate token
+        ValidateTokenResponseDto response = authenticationClient.validate(token, userId);
+
+        if(response.getSessionStatus().equals(SessionStatus.INVALID) || response.getSessionStatus().equals(SessionStatus.EXPIRED)){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        boolean isUserAdmin = false;
+        for (Role role: response.getUserDto().getRoles())
+        {
+            if (role.getName().equals("ADMIN")) {
+                isUserAdmin = true;
+                break;
+            }
+        }
+        if(!isUserAdmin) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         // Rest template
+        RestTemplate rt = new RestTemplate();
         ResponseEntity<List<Product>> responseEntity = new ResponseEntity(productService.getAllProducts(), HttpStatus.OK);
         return responseEntity;
     }
